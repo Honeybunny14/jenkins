@@ -36,5 +36,12 @@ pipeline
               sh 'scp /var/lib/jenkins/workspace/pipelined/webapp/target/webapp.war ubuntu@172.31.9.161:/var/lib/tomcat9/webapps/prodapp.war'
             }
         }
+        stage('ci-cd completed')
+        {
+            steps
+            {
+              sh 'echo "completed"'
+            }
+        }
     }
 }
