@@ -1,0 +1,40 @@
+pipeline
+{
+    agent any
+    stages{
+        stage('continuous download'){
+            steps{
+               git 'https://github.com/intelliqittrainings/maven.git' 
+            }
+        }
+        stage('continous build'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+        stage('continous deployment')
+        {
+            steps{
+                script
+                {
+               sh 'scp /var/lib/jenkins/workspace/pipelined/webapp/target/webapp.war ubuntu@172.31.0.220:/var/lib/tomcat9/webapps/testapp.war'
+                }
+            }
+        }
+        stage('continuous testing')
+        {
+            steps
+            {
+                git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
+                sh 'java -jar /var/lib/jenkins/workspace/pipelined/testing.jar'
+            }
+        }
+        stage('continuous delivery')
+        {
+            steps
+            {
+              sh 'scp /var/lib/jenkins/workspace/pipelined/webapp/target/webapp.war ubuntu@172.31.9.161:/var/lib/tomcat9/webapps/prodapp.war'
+            }
+        }
+    }
+}
