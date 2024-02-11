@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    try {
+                        git url: 'https://github.com/intelliqittrainings/maven.git'
+                    } catch (Exception e1) {
+                        echo "Failed to download the repository"
+                        exit(1)
+                    }
+                }
+            }
+        }
+        stage('Continuous build') {
+            steps {
+                script {
+                    try {
+                         sh 'mvn package'
+                    } catch (Exception e2) {
+                        echo "Failed to build the repository"
+                        exit(1)
+                    }
+                }
+            }
+        }
+    }
+}
