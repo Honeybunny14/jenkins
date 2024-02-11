@@ -1,0 +1,64 @@
+@Library('librarie')_
+
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('ContDownload')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newDownload("maven.git")
+                }
+            }
+        }
+        stage('ContBuild')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newBuild()
+                }
+            }
+        }
+        stage('ContDeployment')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newDeploy("sharedlibrariesd","172.31.0.220","testapp")
+                }
+            }
+        }
+        stage('ContTesting')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newDownload("FunctionalTesting.git")
+                    cicd.runSelenium("sharedlibrariesd")
+                }
+            }
+        }
+        stage('ContDelivery')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newDeploy("sharedlibrariesd","172.31.9.161","prodapp")
+                }
+            }
+        }
+        
+        
+        
+        
+    }
+}
